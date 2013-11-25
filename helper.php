@@ -39,7 +39,7 @@ class helper_plugin_maintenance extends DokuWiki_Plugin {
             array($this, 'cb_check_cache'),
             array(
                  'maxage' => $this->getConf('cacheage'),
-                 'useatime' => true
+                 'useatime' => $this->supportsatime()
             )
         );
 
@@ -107,6 +107,25 @@ class helper_plugin_maintenance extends DokuWiki_Plugin {
 
         $this->size += $size;
         $this->list[] = $file;
+    }
+
+    /**
+     * Checks if the filesystem supports atimes
+     *
+     * @return bool
+     */
+    protected function supportsatime(){
+        global $conf;
+
+        $testfile = $conf['cachedir'].'/atime';
+        io_saveFile($testfile, 'x');
+        $mtime = filemtime($testfile);
+        sleep(1);
+        io_readFile($testfile);
+        clearstatcache(false, $testfile);
+        $atime = @fileatime($testfile);
+
+        return ($mtime != $atime);
     }
 
     /**
