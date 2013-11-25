@@ -14,7 +14,7 @@ class helper_plugin_maintenance extends DokuWiki_Plugin {
     private $log = 0;
 
     /** @var bool do no actually delete */
-    public $dryrun = true;
+    private $dryrun = true;
 
     /** @var array list of files */
     public $list = array();
@@ -27,9 +27,11 @@ class helper_plugin_maintenance extends DokuWiki_Plugin {
     /**
      * Runs all the checks
      */
-    public function run() {
+    public function run($dryrun=true) {
         global $conf;
         $data = array();
+
+        $this->dryrun = $dryrun;
 
         @set_time_limit(0);
 
@@ -124,6 +126,7 @@ class helper_plugin_maintenance extends DokuWiki_Plugin {
         io_readFile($testfile);
         clearstatcache(false, $testfile);
         $atime = @fileatime($testfile);
+        @unlink($testfile);
 
         return ($mtime != $atime);
     }

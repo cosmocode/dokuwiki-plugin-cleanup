@@ -19,7 +19,7 @@ class action_plugin_maintenance extends DokuWiki_Action_Plugin {
      */
     public function register(Doku_Event_Handler &$controller) {
 
-       $controller->register_hook('INDEXER_TASKS_RUN', 'FIXME', $this, 'handle_indexer_tasks_run');
+       $controller->register_hook('INDEXER_TASKS_RUN', 'AFTER', $this, 'handle_indexer_tasks_run');
    
     }
 
@@ -33,6 +33,22 @@ class action_plugin_maintenance extends DokuWiki_Action_Plugin {
      */
 
     public function handle_indexer_tasks_run(Doku_Event &$event, $param) {
+        if(!$this->getConf['runautomatically']) return;
+        global $conf;
+
+        // only run once everyday
+        $lastrun = $conf['cachedir'].'/maintainance.run';
+        $ranat   = @filemtime($lastrun);
+        if($ranat && (time() - $ranat) < 60*60*24 ) return;
+        io_saveFile($lastrun,'');
+
+        // our turn!
+        $event->preventDefault();
+        $event->stopPropagation();
+
+        // and action
+        $helper = $this->loadHelper('maintenance', false);
+        $helper->run();
     }
 
 }
