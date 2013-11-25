@@ -1,0 +1,7 @@
+base   maintenance
+author Andreas Gohr
+email  gohr@cosmocode.de
+date   2013-11-25
+name   maintenance plugin
+desc   Perform file maintenance in the wiki
+url    http://www.dokuwiki.org/plugin:maintenance
