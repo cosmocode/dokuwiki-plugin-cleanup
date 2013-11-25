@@ -6,11 +6,13 @@
  */
 
 // menu entry for admin plugins
-// $lang['menu'] = 'Your menu entry';
+$lang['menu'] = 'Maintenance Clean-Up';
 
 // custom language strings for the plugin
-// $lang['fixme'] = 'FIXME';
-
+$lang['sum'] = '%d files using %s of space where found.';
+$lang['preview'] = 'Preview affected files';
+$lang['execute'] = 'Delete affected files';
+$lang['done'] = 'The files have been deleted.';
 
 
 //Setup VIM: ex: et ts=4 :

@@ -14,18 +14,28 @@ class helper_plugin_maintenance extends DokuWiki_Plugin {
     private $log = 0;
 
     /** @var bool do no actually delete */
-    private $dryrun = true;
+    public $dryrun = true;
+
+    /** @var array list of files */
+    public $list = array();
+
+    /** @var int sum of deleted files */
+    public $size = 0;
+
+
 
     /**
      * Runs all the checks
      */
     public function run() {
-        global $meta;
+        global $conf;
         $data = array();
+
+        @set_time_limit(0);
 
         search(
             $data,
-            $meta['cachedir'],
+            $conf['cachedir'],
             array($this, 'cb_check_cache'),
             array(
                  'maxage' => $this->getConf('cacheage'),
@@ -35,7 +45,7 @@ class helper_plugin_maintenance extends DokuWiki_Plugin {
 
         search(
             $data,
-            $meta['olddir'],
+            $conf['olddir'],
             array($this, 'cb_check_attic'),
             array(
                  'maxage' => $this->getConf('atticage'),
@@ -45,7 +55,7 @@ class helper_plugin_maintenance extends DokuWiki_Plugin {
 
         search(
             $data,
-            $meta['mediaolddir'],
+            $conf['mediaolddir'],
             array($this, 'cb_check_mediaattic'),
             array(
                  'maxage' => $this->getConf('mediaatticage'),
@@ -55,7 +65,7 @@ class helper_plugin_maintenance extends DokuWiki_Plugin {
 
         search(
             $data,
-            $meta['metadir'],
+            $conf['metadir'],
             array($this, 'cb_check_meta'),
             array(
                  'maxage' => $this->getConf('metaage'),
@@ -64,7 +74,7 @@ class helper_plugin_maintenance extends DokuWiki_Plugin {
 
         search(
             $data,
-            $meta['lockdir'],
+            $conf['lockdir'],
             array($this, 'cb_check_locks'),
             array(
                  'maxage' => $this->getConf('lockage'),
@@ -79,20 +89,24 @@ class helper_plugin_maintenance extends DokuWiki_Plugin {
      * @param string $type type of file to delete
      */
     public function delete($file, $type) {
-        global $meta;
+        global $conf;
+
+        $size = filesize($file);
+        $time = time();
 
         // delete the file
         if(!$this->dryrun){
             @unlink($file);
+
+            // log to file
+            if(!$this->log) $this->log = fopen($conf['cachedir'] . '/maintenance.log', 'a');
+            if($this->log) {
+                fwrite($this->log, "$time\t$size\t$type\t$file\n");
+            }
         }
 
-        // log to file
-        if(!$this->log) $this->log = fopen($meta['cachedir'] . '/maintenance.log', 'a');
-        if($this->log) {
-            $size = filesize($file);
-            $time = time();
-            fwrite($this->log, "$time\t$size\t$type\t$file\n");
-        }
+        $this->size += $size;
+        $this->list[] = $file;
     }
 
     /**

@@ -8,4 +8,4 @@ session_write_close();
 
 $plugin = plugin_load('helper','maintenance');
 
-$plugin->check_cache();
+$plugin->run();

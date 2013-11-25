@@ -1,0 +1,5 @@
+====== Maintenance ======
+
+This plugin can check the data directory for old, probably unused files. What is considered old, can be set in the [[?do=admin&page=config|configuration]].
+
+Below you can preview and delete files that match the configuration. Once you're satisfied the plugin does what you want, you can let it run automatically by enabling the appropriate configuration option.
