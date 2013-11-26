@@ -1,0 +1,5 @@
+====== Wartung ======
+
+Dieses Plugin sucht nach alten, vermutlich nciht mehr verwendeten Dateien im data-Verzeichnis. Welche Dateien als alt behandelt werden kann in der [[?do=admin&page=config|Konfiguration]] eingestellt werden.
+
+Hier können die eine Vorschau über die Dateien die nach der aktuellen Konfiguration gelöscht werden würden erhalten und bei Bedarf die Löschung durchführen. Wenn Sie sicher sind, dass das Plugin zu den gewünschten Ergebnissen führt können Sie die automatisch Ausführung in der Konfiguration aktivieren.
