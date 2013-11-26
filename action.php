@@ -53,7 +53,7 @@ class action_plugin_maintenance extends DokuWiki_Action_Plugin {
         echo "maintenance: started\n";
         /** @var helper_plugin_maintenance $helper */
         $helper = $this->loadHelper('maintenance', false);
-        $helper->run();
+        $helper->run(true);
         echo 'maintenance: finished. found '.count($helper->list)." files\n";
     }
 

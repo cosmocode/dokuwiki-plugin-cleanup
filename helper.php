@@ -27,11 +27,11 @@ class helper_plugin_maintenance extends DokuWiki_Plugin {
     /**
      * Runs all the checks
      */
-    public function run($dryrun=true) {
+    public function run($run=false) {
         global $conf;
         $data = array();
 
-        $this->dryrun = $dryrun;
+        $this->dryrun = !$run;
 
         @set_time_limit(0);
 
@@ -98,17 +98,20 @@ class helper_plugin_maintenance extends DokuWiki_Plugin {
 
         // delete the file
         if(!$this->dryrun){
-            @unlink($file);
+            if(@unlink($file)){
+                // log to file
+                if(!$this->log) $this->log = fopen($conf['cachedir'] . '/maintenance.log', 'a');
+                if($this->log) {
+                    fwrite($this->log, "$time\t$size\t$type\t$file\n");
+                }
 
-            // log to file
-            if(!$this->log) $this->log = fopen($conf['cachedir'] . '/maintenance.log', 'a');
-            if($this->log) {
-                fwrite($this->log, "$time\t$size\t$type\t$file\n");
+                $this->size += $size;
+                $this->list[] = $file;
             }
+        }else{
+            $this->size += $size;
+            $this->list[] = $file;
         }
-
-        $this->size += $size;
-        $this->list[] = $file;
     }
 
     /**

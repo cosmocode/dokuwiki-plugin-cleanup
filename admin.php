@@ -38,6 +38,7 @@ class admin_plugin_maintenance extends DokuWiki_Admin_Plugin {
         global $ID;
 
         echo $this->locale_xhtml('intro');
+        tpl_flush();
 
         if(empty($_REQUEST['run'])) {
             $form = new Doku_Form(array('action' => script(), 'method' => 'post'));
@@ -47,8 +48,12 @@ class admin_plugin_maintenance extends DokuWiki_Admin_Plugin {
             $form->addElement(form_makeButton('submit', 'admin', $this->getLang('preview')));
             $form->printForm();
         } else {
+            if($_REQUEST['run'] == 'real') {
+                $this->helper->run(true);
+            } else {
+                $this->helper->run();
+            }
 
-            $this->helper->run();
             echo '<ul class="maintenance_files">';
             foreach($this->helper->list as $file) {
                 echo '<li><div class="li">' . hsc($file) . '</div></li>';

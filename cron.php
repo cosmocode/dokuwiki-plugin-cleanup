@@ -6,6 +6,6 @@ define('DOKU_DISABLE_GZIP_OUTPUT', 1);
 require_once(DOKU_INC.'inc/init.php');
 session_write_close();
 
+/** @var helper_plugin_maintenance $plugin */
 $plugin = plugin_load('helper','maintenance');
-
-$plugin->run();
+$plugin->run(true);
