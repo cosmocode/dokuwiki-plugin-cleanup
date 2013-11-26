@@ -1,6 +1,6 @@
 <?php
 /**
- * DokuWiki Plugin maintenance (Helper Component)
+ * DokuWiki Plugin cleanup (Helper Component)
  *
  * @license GPL 2 http://www.gnu.org/licenses/gpl-2.0.html
  * @author  Andreas Gohr <gohr@cosmocode.de>
@@ -9,7 +9,7 @@
 // must be run within Dokuwiki
 if(!defined('DOKU_INC')) die();
 
-class helper_plugin_maintenance extends DokuWiki_Plugin {
+class helper_plugin_cleanup extends DokuWiki_Plugin {
     /** @var int log file pointer */
     private $log = 0;
 
@@ -100,7 +100,7 @@ class helper_plugin_maintenance extends DokuWiki_Plugin {
         if(!$this->dryrun){
             if(@unlink($file)){
                 // log to file
-                if(!$this->log) $this->log = fopen($conf['cachedir'] . '/maintenance.log', 'a');
+                if(!$this->log) $this->log = fopen($conf['cachedir'] . '/cleanup.log', 'a');
                 if($this->log) {
                     fwrite($this->log, "$time\t$size\t$type\t$file\n");
                 }

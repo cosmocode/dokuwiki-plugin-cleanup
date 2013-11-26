@@ -1,6 +1,6 @@
 <?php
 /**
- * german language file for maintenance plugin
+ * german language file for cleanup plugin
  *
  * @author Andreas Gohr <gohr@cosmocode.de>
  */

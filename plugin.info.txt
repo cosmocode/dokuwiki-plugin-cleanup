@@ -1,7 +1,7 @@
-base   maintenance
+base   cleanup
 author Andreas Gohr
 email  gohr@cosmocode.de
 date   2013-11-26
-name   maintenance plugin
-desc   Perform file maintenance in the wiki
-url    http://www.dokuwiki.org/plugin:maintenance
+name   cleanup plugin
+desc   Perform file cleanup in the wiki
+url    http://www.dokuwiki.org/plugin:cleanup

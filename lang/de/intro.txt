@@ -1,4 +1,4 @@
-====== Wartung ======
+====== Datei-Bereinigung ======
 
 Dieses Plugin sucht nach alten, vermutlich nciht mehr verwendeten Dateien im data-Verzeichnis. Welche Dateien als alt behandelt werden kann in der [[?do=admin&page=config|Konfiguration]] eingestellt werden.
 

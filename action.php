@@ -1,6 +1,6 @@
 <?php
 /**
- * DokuWiki Plugin maintenance (Action Component)
+ * DokuWiki Plugin cleanup (Action Component)
  *
  * @license GPL 2 http://www.gnu.org/licenses/gpl-2.0.html
  * @author  Andreas Gohr <gohr@cosmocode.de>
@@ -9,7 +9,7 @@
 // must be run within Dokuwiki
 if(!defined('DOKU_INC')) die();
 
-class action_plugin_maintenance extends DokuWiki_Action_Plugin {
+class action_plugin_cleanup extends DokuWiki_Action_Plugin {
 
     /**
      * Registers a callback function for a given event
@@ -37,10 +37,10 @@ class action_plugin_maintenance extends DokuWiki_Action_Plugin {
         global $conf;
 
         // only run once everyday
-        $lastrun = $conf['cachedir'].'/maintenance.run';
+        $lastrun = $conf['cachedir'].'/cleanup.run';
         $ranat   = @filemtime($lastrun);
         if($ranat && (time() - $ranat) < 60*60*24 ){
-            echo "maintenance: skipped\n";
+            echo "cleanup: skipped\n";
             return;
         }
         io_saveFile($lastrun,'');
@@ -50,11 +50,11 @@ class action_plugin_maintenance extends DokuWiki_Action_Plugin {
         $event->stopPropagation();
 
         // and action
-        echo "maintenance: started\n";
-        /** @var helper_plugin_maintenance $helper */
-        $helper = $this->loadHelper('maintenance', false);
+        echo "cleanup: started\n";
+        /** @var helper_plugin_cleanup $helper */
+        $helper = $this->loadHelper('cleanup', false);
         $helper->run(true);
-        echo 'maintenance: finished. found '.count($helper->list)." files\n";
+        echo 'cleanup: finished. found '.count($helper->list)." files\n";
     }
 
 }

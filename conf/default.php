@@ -1,6 +1,6 @@
 <?php
 /**
- * Default settings for the maintenance plugin
+ * Default settings for the cleanup plugin
  *
  * @author Andreas Gohr <gohr@cosmocode.de>
  */

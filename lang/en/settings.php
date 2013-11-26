@@ -1,11 +1,11 @@
 <?php
 /**
- * english language file for maintenance plugin
+ * english language file for cleanup plugin
  *
  * @author Andreas Gohr <gohr@cosmocode.de>
  */
 
-$lang['runautomatically'] = 'Run the maintenance clean up process automatically?';
+$lang['runautomatically'] = 'Run the file cleanup process automatically?';
 
 $lang['cacheage'] = 'Delete cache files after this time (seconds).';
 $lang['atticage'] = 'Delete old page revisions after this time (seconds).';

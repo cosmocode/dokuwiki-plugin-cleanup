@@ -1,12 +1,12 @@
 <?php
 /**
- * English language file for maintenance plugin
+ * English language file for cleanup plugin
  *
  * @author Andreas Gohr <gohr@cosmocode.de>
  */
 
 // menu entry for admin plugins
-$lang['menu'] = 'Maintenance Clean-Up';
+$lang['menu'] = 'File Cleanup';
 
 // custom language strings for the plugin
 $lang['sum'] = '%d files using %s of space were found.';

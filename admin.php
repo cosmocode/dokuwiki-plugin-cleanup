@@ -9,12 +9,12 @@
 // must be run within Dokuwiki
 if(!defined('DOKU_INC')) die();
 
-class admin_plugin_maintenance extends DokuWiki_Admin_Plugin {
-    /** @var  helper_plugin_maintenance */
+class admin_plugin_cleanup extends DokuWiki_Admin_Plugin {
+    /** @var  helper_plugin_cleanup */
     private $helper;
 
     public function __construct() {
-        $this->helper = $this->loadHelper('maintenance', false);
+        $this->helper = $this->loadHelper('cleanup', false);
     }
 
     /**
@@ -43,7 +43,7 @@ class admin_plugin_maintenance extends DokuWiki_Admin_Plugin {
         if(empty($_REQUEST['run'])) {
             $form = new Doku_Form(array('action' => script(), 'method' => 'post'));
             $form->addHidden('id', $ID);
-            $form->addHidden('page', 'maintenance');
+            $form->addHidden('page', 'cleanup');
             $form->addHidden('run', 'dry');
             $form->addElement(form_makeButton('submit', 'admin', $this->getLang('preview')));
             $form->printForm();
@@ -54,7 +54,7 @@ class admin_plugin_maintenance extends DokuWiki_Admin_Plugin {
                 $this->helper->run();
             }
 
-            echo '<ul class="maintenance_files">';
+            echo '<ul class="cleanup_files">';
             foreach($this->helper->list as $file) {
                 echo '<li><div class="li">' . hsc($file) . '</div></li>';
             }
@@ -64,7 +64,7 @@ class admin_plugin_maintenance extends DokuWiki_Admin_Plugin {
             if($_REQUEST['run'] == 'dry') {
                 $form = new Doku_Form(array('action' => script(), 'method' => 'post'));
                 $form->addHidden('id', $ID);
-                $form->addHidden('page', 'maintenance');
+                $form->addHidden('page', 'cleanup');
                 $form->addHidden('run', 'real');
                 $form->addElement(form_makeButton('submit', 'admin', $this->getLang('execute')));
                 $form->printForm();

@@ -1,4 +1,4 @@
-====== Maintenance ======
+====== File Cleanup ======
 
 This plugin can check the data directory for old, probably unused files. What is considered old, can be set in the [[?do=admin&page=config|configuration]].
 

@@ -1,12 +1,12 @@
-maintenance Plugin for DokuWiki
+cleanup Plugin for DokuWiki
 
-Perform file maintenance in the wiki
+Perform file cleanup in the wiki
 
 All documentation for this plugin can be found at
-http://www.dokuwiki.org/plugin:maintenance
+http://www.dokuwiki.org/plugin:cleanup
 
 If you install this plugin manually, make sure it is installed in
-lib/plugins/maintenance/ - if the folder is called different it
+lib/plugins/cleanup/ - if the folder is called different it
 will not work!
 
 Please refer to http://www.dokuwiki.org/plugins for additional info
