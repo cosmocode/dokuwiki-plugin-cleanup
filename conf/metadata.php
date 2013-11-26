@@ -5,14 +5,14 @@
  * @author Andreas Gohr <gohr@cosmocode.de>
  */
 
-$meta['runautomatically'] = array('onoff');
+$meta['runautomatically']   = array('onoff');
 
-$meta['cacheage'] = array('numeric');
-$meta['atticage'] = array('numeric');
-$meta['atticnoexonly'] = 1;
-$meta['mediaatticage'] = array('numeric');
-$meta['mediaatticnoexonly'] = 1;
-$meta['metaage'] = array('numeric');
-$meta['mediametaage'] = array('numeric');
-$meta['lockage'] = array('numeric');
+$meta['cacheage']           = array('numeric');
+$meta['atticage']           = array('numeric');
+$meta['atticnoexonly']      = array('onoff');
+$meta['mediaatticage']      = array('numeric');
+$meta['mediaatticnoexonly'] = array('onoff');
+$meta['metaage']            = array('numeric');
+$meta['mediametaage']       = array('numeric');
+$meta['lockage']            = array('numeric');
 

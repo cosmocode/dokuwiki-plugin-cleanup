@@ -33,15 +33,14 @@ class action_plugin_maintenance extends DokuWiki_Action_Plugin {
      */
 
     public function handle_indexer_tasks_run(Doku_Event &$event, $param) {
-        if(!$this->getConf['runautomatically']) return;
+        if(!$this->getConf('runautomatically')) return;
         global $conf;
-        echo 'maintenance: started';
 
         // only run once everyday
         $lastrun = $conf['cachedir'].'/maintainance.run';
         $ranat   = @filemtime($lastrun);
         if($ranat && (time() - $ranat) < 60*60*24 ){
-            echo 'maintenance: skipped';
+            echo "maintenance: skipped\n";
             return;
         }
         io_saveFile($lastrun,'');
@@ -51,11 +50,11 @@ class action_plugin_maintenance extends DokuWiki_Action_Plugin {
         $event->stopPropagation();
 
         // and action
-
+        echo "maintenance: started\n";
         /** @var helper_plugin_maintenance $helper */
         $helper = $this->loadHelper('maintenance', false);
         $helper->run();
-        echo 'maintenance: finished. found '.count($helper->list).' files';
+        echo 'maintenance: finished. found '.count($helper->list)." files\n";
     }
 
 }
