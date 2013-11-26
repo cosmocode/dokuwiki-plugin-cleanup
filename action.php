@@ -37,7 +37,7 @@ class action_plugin_maintenance extends DokuWiki_Action_Plugin {
         global $conf;
 
         // only run once everyday
-        $lastrun = $conf['cachedir'].'/maintainance.run';
+        $lastrun = $conf['cachedir'].'/maintenance.run';
         $ranat   = @filemtime($lastrun);
         if($ranat && (time() - $ranat) < 60*60*24 ){
             echo "maintenance: skipped\n";
