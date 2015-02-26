@@ -1,7 +1,7 @@
 base   cleanup
 author Andreas Gohr
-email  gohr@cosmocode.de
-date   2013-12-01
+email  dokuwiki@cosmocode.de
+date   2015-02-26
 name   cleanup plugin
 desc   Perform file cleanup in the wiki
 url    http://www.dokuwiki.org/plugin:cleanup
