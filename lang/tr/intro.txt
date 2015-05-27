@@ -1,0 +1,4 @@
+====== Dosya Temizleme ======
+
+Bu eklenti, data klasörü içindeki eski ve muhtemelen kullanılmayan dosyaları denetler. Neyin eski kabul edileceğini [[?do=admin&page=config|yönetim]] sayfasından tanımlayabilirsiniz.
+Aşağıdaki düğmeye bastığınızda tanımlama ölçütlerinize uyan dosyalar silinmek üzere listeleneceklerdir. Eklentinin istediğiniz biçimde çalıştığına kanaat getirdikten sonra, isterseniz yönetim sayfasındaki ilgili seçeneği etkinleştirerek, eklentinin otomatik çalışmasını sağlayabilirsiniz.
