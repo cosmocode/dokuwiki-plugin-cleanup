@@ -1,0 +1,5 @@
+====== Nettoyage de fichier ======
+
+Ce greffon peut regarder dans le répertoire data s'il s'y trouve de vieux fichiers probablement non-utilisés. Ce qui est considéré comme vieux, peut être paramétré dans la [[?do=admin&page=config|configuration]].
+
+Ci dessous, vous pouvez voir par avance et confirmer l'effacement des fichiers qui corresponde à la configuration. Une fois que vous êtes satisfait et que le greffon fait ce que vous souhaitez, vous pouvez le laisser fonctionner automatiquement en validant l'option de configuration appropriée.
