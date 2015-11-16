@@ -1,0 +1,5 @@
+====== Čištění souborů ======
+
+Tento zásuvný modul umí zkontrolovat data adresář na výskyt starých a pravděpodobně nepoužívaných souborů. Nastavení toho co je považováno za staré, lze nastavit na stránce [[?do=admin&page=config|configuration]].
+
+Níže můžete prohlédnout a smazat soubory, které odpovídají konfiguraci. Poté co jste spokojeni s výsledky, můžete povolit automatické spouštění nastavením odpovídající konfigurace.
