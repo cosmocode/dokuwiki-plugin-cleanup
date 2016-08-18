@@ -1,0 +1,5 @@
+====== Bestanden Opschonen ======
+
+Deze plugin kan de data directory controleren op oude, meestal niet gebruikte bestanden. Wat wordt verstaan onder oud, kan worden ingesteld in de [[?do=admin&page=config|cofiguration]].
+
+Beneden kun je een voorbeeld en verwijderde bestanden zien die met de cofinguratie overeen komen. Wanneer je tevreden bent wat de plugin selecteerd, kun je deze automatisch laten starten door gekozen instelling te bewaren.
