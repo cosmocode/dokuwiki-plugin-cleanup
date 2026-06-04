@@ -1,0 +1,5 @@
+====== Čistenie súborov ======
+
+Tento plugin dokáže skontrolovať dátový adresár na staré, pravdepodobne nepoužívané súbory. Čo sa považuje za staré, sa dá nastaviť v [[?do=admin&page=config|konfigurácii]].
+
+Nižšie si môžete zobraziť náhľad a odstrániť súbory zodpovedajúce konfigurácii. Keď budete spokojní s tým, že plugin robí, čo chcete, môžete ho nechať bežať automaticky povolením príslušnej konfiguračnej voľby.
