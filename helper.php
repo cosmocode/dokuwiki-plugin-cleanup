@@ -57,6 +57,10 @@ class helper_plugin_cleanup extends Plugin
 
     /**
      * Runs all the checks
+     *
+     * A check is skipped when its maximum age is set to 0.
+     *
+     * @param bool $run true to delete the files, false to only list them
      */
     public function run($run = false)
     {
@@ -67,62 +71,74 @@ class helper_plugin_cleanup extends Plugin
 
         @set_time_limit(0);
 
-        search(
-            $data,
-            $conf['cachedir'],
-            [$this, 'cbCheckCache'],
-            [
-                 'maxage' => $this->getConf('cacheage'),
-                 'useatime' => $this->supportsatime()
-            ]
-        );
+        if ($this->getConf('cacheage')) {
+            search(
+                $data,
+                $conf['cachedir'],
+                [$this, 'cbCheckCache'],
+                [
+                     'maxage' => $this->getConf('cacheage'),
+                     'useatime' => $this->supportsatime()
+                ]
+            );
+        }
 
-        search(
-            $data,
-            $conf['olddir'],
-            [$this, 'cbCheckAttic'],
-            [
-                 'maxage' => $this->getConf('atticage'),
-                 'nonexonly' => $this->getConf('atticnoexonly')
-            ]
-        );
+        if ($this->getConf('atticage')) {
+            search(
+                $data,
+                $conf['olddir'],
+                [$this, 'cbCheckAttic'],
+                [
+                     'maxage' => $this->getConf('atticage'),
+                     'nonexonly' => $this->getConf('atticnoexonly')
+                ]
+            );
+        }
 
-        search(
-            $data,
-            $conf['mediaolddir'],
-            [$this, 'cbCheckMediaattic'],
-            [
-                 'maxage' => $this->getConf('mediaatticage'),
-                 'nonexonly' => $this->getConf('mediaatticnoexonly')
-            ]
-        );
+        if ($this->getConf('mediaatticage')) {
+            search(
+                $data,
+                $conf['mediaolddir'],
+                [$this, 'cbCheckMediaattic'],
+                [
+                     'maxage' => $this->getConf('mediaatticage'),
+                     'nonexonly' => $this->getConf('mediaatticnoexonly')
+                ]
+            );
+        }
 
-        search(
-            $data,
-            $conf['metadir'],
-            [$this, 'cbCheckMeta'],
-            [
-                 'maxage' => $this->getConf('metaage'),
-            ]
-        );
+        if ($this->getConf('metaage')) {
+            search(
+                $data,
+                $conf['metadir'],
+                [$this, 'cbCheckMeta'],
+                [
+                     'maxage' => $this->getConf('metaage'),
+                ]
+            );
+        }
 
-        search(
-            $data,
-            $conf['mediametadir'],
-            [$this, 'cbCheckMediameta'],
-            [
-                 'maxage' => $this->getConf('mediametaage'),
-            ]
-        );
+        if ($this->getConf('mediametaage')) {
+            search(
+                $data,
+                $conf['mediametadir'],
+                [$this, 'cbCheckMediameta'],
+                [
+                     'maxage' => $this->getConf('mediametaage'),
+                ]
+            );
+        }
 
-        search(
-            $data,
-            $conf['lockdir'],
-            [$this, 'cbCheckLocks'],
-            [
-                 'maxage' => $this->getConf('lockage'),
-            ]
-        );
+        if ($this->getConf('lockage')) {
+            search(
+                $data,
+                $conf['lockdir'],
+                [$this, 'cbCheckLocks'],
+                [
+                     'maxage' => $this->getConf('lockage'),
+                ]
+            );
+        }
     }
 
     /**
