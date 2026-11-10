@@ -22,7 +22,37 @@ class helper_plugin_cleanup extends DokuWiki_Plugin {
     /** @var int sum of deleted files */
     public $size = 0;
 
+    /** @var int minimum seconds between two completed scheduled runs */
+    const INTERVAL = 86400;
 
+    /** @var int seconds a started scheduled run blocks other scheduled runs */
+    const RUNTIME = 3600;
+
+    /**
+     * Runs the cleanup if no completed run happened in the last INTERVAL seconds
+     *
+     * A started run blocks other scheduled runs for RUNTIME seconds. A run that does not complete
+     * does not count as completed, so it is done again once RUNTIME has passed.
+     *
+     * @return bool true if the cleanup was run
+     */
+    public function runScheduled() {
+        global $conf;
+
+        $finished = $conf['cachedir'] . '/cleanup.run';
+        $running  = $conf['cachedir'] . '/cleanup.running';
+
+        $ranat = @filemtime($finished);
+        if($ranat && (time() - $ranat) < self::INTERVAL) return false;
+        $startedat = @filemtime($running);
+        if($startedat && (time() - $startedat) < self::RUNTIME) return false;
+
+        io_saveFile($running, '');
+        $this->run(true);
+        io_saveFile($finished, '');
+        @unlink($running);
+        return true;
+    }
 
     /**
      * Runs all the checks

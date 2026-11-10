@@ -34,26 +34,16 @@ class action_plugin_cleanup extends DokuWiki_Action_Plugin {
 
     public function handle_indexer_tasks_run(Doku_Event &$event, $param) {
         if(!$this->getConf('runautomatically')) return;
-        global $conf;
 
-        // only run once everyday
-        $lastrun = $conf['cachedir'].'/cleanup.run';
-        $ranat   = @filemtime($lastrun);
-        if($ranat && (time() - $ranat) < 60*60*24 ){
+        /** @var helper_plugin_cleanup $helper */
+        $helper = $this->loadHelper('cleanup', false);
+        if(!$helper->runScheduled()) {
             echo "cleanup: skipped\n";
             return;
         }
-        io_saveFile($lastrun,'');
 
-        // our turn!
         $event->preventDefault();
         $event->stopPropagation();
-
-        // and action
-        echo "cleanup: started\n";
-        /** @var helper_plugin_cleanup $helper */
-        $helper = $this->loadHelper('cleanup', false);
-        $helper->run(true);
         echo 'cleanup: finished. found '.count($helper->list)." files\n";
     }
 
