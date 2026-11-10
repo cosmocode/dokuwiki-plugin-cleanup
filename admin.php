@@ -1,6 +1,7 @@
 <?php
 
 use dokuwiki\Extension\AdminPlugin;
+use dokuwiki\Form\Form;
 
 /**
  * DokuWiki Plugin autologoff (Admin Component)
@@ -56,12 +57,13 @@ class admin_plugin_cleanup extends AdminPlugin
         tpl_flush();
 
         if (!$this->run) {
-            $form = new Doku_Form(['action' => script(), 'method' => 'post']);
-            $form->addHidden('id', $ID);
-            $form->addHidden('page', 'cleanup');
-            $form->addHidden('run', 'dry');
-            $form->addElement(form_makeButton('submit', 'admin', $this->getLang('preview')));
-            $form->printForm();
+            $form = new Form(['action' => script()]);
+            $form->setHiddenField('id', $ID);
+            $form->setHiddenField('do', 'admin');
+            $form->setHiddenField('page', 'cleanup');
+            $form->setHiddenField('run', 'dry');
+            $form->addButton('', $this->getLang('preview'))->attr('type', 'submit');
+            echo $form->toHTML();
         } else {
             echo '<ul class="cleanup_files">';
             foreach ($this->helper->list as $file) {
@@ -75,12 +77,13 @@ class admin_plugin_cleanup extends AdminPlugin
             ) . '</p>';
 
             if ($this->run == 'dry') {
-                $form = new Doku_Form(['action' => script(), 'method' => 'post']);
-                $form->addHidden('id', $ID);
-                $form->addHidden('page', 'cleanup');
-                $form->addHidden('run', 'real');
-                $form->addElement(form_makeButton('submit', 'admin', $this->getLang('execute')));
-                $form->printForm();
+                $form = new Form(['action' => script()]);
+                $form->setHiddenField('id', $ID);
+                $form->setHiddenField('do', 'admin');
+                $form->setHiddenField('page', 'cleanup');
+                $form->setHiddenField('run', 'real');
+                $form->addButton('', $this->getLang('execute'))->attr('type', 'submit');
+                echo $form->toHTML();
             } else {
                 echo '<p>' . $this->getLang('done') . '</p>';
             }
