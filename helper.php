@@ -210,7 +210,7 @@ class helper_plugin_cleanup extends Plugin
         if (time() - $time > $opts['maxage']) {
             // skip existing?
             if ($opts['nonexonly']) {
-                $path = preg_replace('/\.\d+\.txt(\.gz)?$/', '', $file);
+                $path = preg_replace('/\.\d+\.txt(\.gz|\.bz2)?$/', '', $file);
                 $id = pathID($path, true);
                 if (page_exists($id)) return false;
             }
