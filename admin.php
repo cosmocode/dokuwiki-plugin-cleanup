@@ -1,42 +1,45 @@
 <?php
+
+use dokuwiki\Extension\AdminPlugin;
+
 /**
  * DokuWiki Plugin autologoff (Admin Component)
  *
  * @license GPL 2 http://www.gnu.org/licenses/gpl-2.0.html
  * @author  Andreas Gohr <gohr@cosmocode.de>
  */
-
-// must be run within Dokuwiki
-if(!defined('DOKU_INC')) die();
-
-class admin_plugin_cleanup extends DokuWiki_Admin_Plugin {
+class admin_plugin_cleanup extends AdminPlugin
+{
     /** @var  helper_plugin_cleanup */
     private $helper;
 
     /** @var string the executed run mode, dry or real, empty if nothing was run */
     private $run = '';
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->helper = $this->loadHelper('cleanup', false);
     }
 
     /**
      * @return int sort number in admin menu
      */
-    public function getMenuSort() {
+    public function getMenuSort()
+    {
         return 600;
     }
 
     /**
      * Should carry out any processing required by the plugin.
      */
-    public function handle() {
+    public function handle()
+    {
         global $INPUT;
 
-        if($INPUT->post->str('run') == 'real' && checkSecurityToken()) {
+        if ($INPUT->post->str('run') == 'real' && checkSecurityToken()) {
             $this->helper->run(true);
             $this->run = 'real';
-        } elseif($INPUT->str('run') == 'dry') {
+        } elseif ($INPUT->str('run') == 'dry') {
             $this->helper->run();
             $this->run = 'dry';
         }
@@ -45,14 +48,15 @@ class admin_plugin_cleanup extends DokuWiki_Admin_Plugin {
     /**
      * Render HTML output, e.g. helpful text and a form
      */
-    public function html() {
+    public function html()
+    {
         global $ID;
 
         echo $this->locale_xhtml('intro');
         tpl_flush();
 
-        if(!$this->run) {
-            $form = new Doku_Form(array('action' => script(), 'method' => 'post'));
+        if (!$this->run) {
+            $form = new Doku_Form(['action' => script(), 'method' => 'post']);
             $form->addHidden('id', $ID);
             $form->addHidden('page', 'cleanup');
             $form->addHidden('run', 'dry');
@@ -60,14 +64,18 @@ class admin_plugin_cleanup extends DokuWiki_Admin_Plugin {
             $form->printForm();
         } else {
             echo '<ul class="cleanup_files">';
-            foreach($this->helper->list as $file) {
+            foreach ($this->helper->list as $file) {
                 echo '<li><div class="li">' . hsc($file) . '</div></li>';
             }
             echo '</ul>';
-            echo '<p>' . sprintf($this->getLang('sum'), count($this->helper->list), filesize_h($this->helper->size)) . '</p>';
+            echo '<p>' . sprintf(
+                $this->getLang('sum'),
+                count($this->helper->list),
+                filesize_h($this->helper->size)
+            ) . '</p>';
 
-            if($this->run == 'dry') {
-                $form = new Doku_Form(array('action' => script(), 'method' => 'post'));
+            if ($this->run == 'dry') {
+                $form = new Doku_Form(['action' => script(), 'method' => 'post']);
                 $form->addHidden('id', $ID);
                 $form->addHidden('page', 'cleanup');
                 $form->addHidden('run', 'real');
@@ -77,8 +85,5 @@ class admin_plugin_cleanup extends DokuWiki_Admin_Plugin {
                 echo '<p>' . $this->getLang('done') . '</p>';
             }
         }
-
     }
 }
-
-// vim:ts=4:sw=4:et:

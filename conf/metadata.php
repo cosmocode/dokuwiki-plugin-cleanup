@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Options for the cleanup plugin
  *
@@ -15,4 +16,3 @@ $meta['mediaatticnoexonly'] = array('onoff');
 $meta['metaage']            = array('numeric');
 $meta['mediametaage']       = array('numeric');
 $meta['lockage']            = array('numeric');
-

@@ -1,15 +1,15 @@
 <?php
+
+use dokuwiki\Extension\Plugin;
+
 /**
  * DokuWiki Plugin cleanup (Helper Component)
  *
  * @license GPL 2 http://www.gnu.org/licenses/gpl-2.0.html
  * @author  Andreas Gohr <gohr@cosmocode.de>
  */
-
-// must be run within Dokuwiki
-if(!defined('DOKU_INC')) die();
-
-class helper_plugin_cleanup extends DokuWiki_Plugin {
+class helper_plugin_cleanup extends Plugin
+{
     /** @var int log file pointer */
     private $log = 0;
 
@@ -17,16 +17,16 @@ class helper_plugin_cleanup extends DokuWiki_Plugin {
     private $dryrun = true;
 
     /** @var array list of files */
-    public $list = array();
+    public $list = [];
 
     /** @var int sum of deleted files */
     public $size = 0;
 
     /** @var int minimum seconds between two completed scheduled runs */
-    const INTERVAL = 86400;
+    protected const INTERVAL = 86400;
 
     /** @var int seconds a started scheduled run blocks other scheduled runs */
-    const RUNTIME = 3600;
+    protected const RUNTIME = 3600;
 
     /**
      * Runs the cleanup if no completed run happened in the last INTERVAL seconds
@@ -36,16 +36,17 @@ class helper_plugin_cleanup extends DokuWiki_Plugin {
      *
      * @return bool true if the cleanup was run
      */
-    public function runScheduled() {
+    public function runScheduled()
+    {
         global $conf;
 
         $finished = $conf['cachedir'] . '/cleanup.run';
         $running  = $conf['cachedir'] . '/cleanup.running';
 
         $ranat = @filemtime($finished);
-        if($ranat && (time() - $ranat) < self::INTERVAL) return false;
+        if ($ranat && (time() - $ranat) < self::INTERVAL) return false;
         $startedat = @filemtime($running);
-        if($startedat && (time() - $startedat) < self::RUNTIME) return false;
+        if ($startedat && (time() - $startedat) < self::RUNTIME) return false;
 
         io_saveFile($running, '');
         $this->run(true);
@@ -57,9 +58,10 @@ class helper_plugin_cleanup extends DokuWiki_Plugin {
     /**
      * Runs all the checks
      */
-    public function run($run=false) {
+    public function run($run = false)
+    {
         global $conf;
-        $data = array();
+        $data = [];
 
         $this->dryrun = !$run;
 
@@ -68,49 +70,49 @@ class helper_plugin_cleanup extends DokuWiki_Plugin {
         search(
             $data,
             $conf['cachedir'],
-            array($this, 'cb_check_cache'),
-            array(
+            [$this, 'cbCheckCache'],
+            [
                  'maxage' => $this->getConf('cacheage'),
                  'useatime' => $this->supportsatime()
-            )
+            ]
         );
 
         search(
             $data,
             $conf['olddir'],
-            array($this, 'cb_check_attic'),
-            array(
+            [$this, 'cbCheckAttic'],
+            [
                  'maxage' => $this->getConf('atticage'),
                  'nonexonly' => $this->getConf('atticnoexonly')
-            )
+            ]
         );
 
         search(
             $data,
             $conf['mediaolddir'],
-            array($this, 'cb_check_mediaattic'),
-            array(
+            [$this, 'cbCheckMediaattic'],
+            [
                  'maxage' => $this->getConf('mediaatticage'),
                  'nonexonly' => $this->getConf('mediaatticnoexonly')
-            )
+            ]
         );
 
         search(
             $data,
             $conf['metadir'],
-            array($this, 'cb_check_meta'),
-            array(
+            [$this, 'cbCheckMeta'],
+            [
                  'maxage' => $this->getConf('metaage'),
-            )
+            ]
         );
 
         search(
             $data,
             $conf['lockdir'],
-            array($this, 'cb_check_locks'),
-            array(
+            [$this, 'cbCheckLocks'],
+            [
                  'maxage' => $this->getConf('lockage'),
-            )
+            ]
         );
     }
 
@@ -120,25 +122,26 @@ class helper_plugin_cleanup extends DokuWiki_Plugin {
      * @param string $file file to delete
      * @param string $type type of file to delete
      */
-    public function delete($file, $type) {
+    public function delete($file, $type)
+    {
         global $conf;
 
         $size = filesize($file);
         $time = time();
 
         // delete the file
-        if(!$this->dryrun){
-            if(@unlink($file)){
+        if (!$this->dryrun) {
+            if (@unlink($file)) {
                 // log to file
-                if(!$this->log) $this->log = fopen($conf['cachedir'] . '/cleanup.log', 'a');
-                if($this->log) {
+                if (!$this->log) $this->log = fopen($conf['cachedir'] . '/cleanup.log', 'a');
+                if ($this->log) {
                     fwrite($this->log, "$time\t$size\t$type\t$file\n");
                 }
 
                 $this->size += $size;
                 $this->list[] = $file;
             }
-        }else{
+        } else {
             $this->size += $size;
             $this->list[] = $file;
         }
@@ -149,10 +152,11 @@ class helper_plugin_cleanup extends DokuWiki_Plugin {
      *
      * @return bool
      */
-    protected function supportsatime(){
+    protected function supportsatime()
+    {
         global $conf;
 
-        $testfile = $conf['cachedir'].'/atime';
+        $testfile = $conf['cachedir'] . '/atime';
         io_saveFile($testfile, 'x');
         $mtime = filemtime($testfile);
         sleep(1);
@@ -167,18 +171,19 @@ class helper_plugin_cleanup extends DokuWiki_Plugin {
     /**
      * Callback for checking the cache directories
      */
-    public function cb_check_cache(&$data, $base, $file, $type, $lvl, $opts) {
-        if($type == 'd') {
+    public function cbCheckCache(&$data, $base, $file, $type, $lvl, $opts)
+    {
+        if ($type == 'd') {
             // we only recurse into our known cache key directories
-            if($lvl == 1 && !preg_match('/^\/[a-f0-9]$/', $file)) return false;
+            if ($lvl == 1 && !preg_match('/^\/[a-f0-9]$/', $file)) return false;
             return true;
         }
-        if($lvl == 1) return false; // ignore all files in top directory
+        if ($lvl == 1) return false; // ignore all files in top directory
 
         $time = $opts['useatime'] ? fileatime($base . $file) : filemtime($base . $file);
 
-        if(time() - $time > $opts['maxage']) {
-            $this->delete($base.$file, 'cache');
+        if (time() - $time > $opts['maxage']) {
+            $this->delete($base . $file, 'cache');
         }
         return true;
     }
@@ -186,21 +191,22 @@ class helper_plugin_cleanup extends DokuWiki_Plugin {
     /**
      * Callback for checking the page attic directories
      */
-    public function cb_check_attic(&$data, $base, $file, $type, $lvl, $opts) {
-        if($type == 'd') {
+    public function cbCheckAttic(&$data, $base, $file, $type, $lvl, $opts)
+    {
+        if ($type == 'd') {
             return true;
         }
 
         $time = filemtime($base . $file);
-        if(time() - $time > $opts['maxage']) {
+        if (time() - $time > $opts['maxage']) {
             // skip existing?
-            if($opts['nonexonly']) {
+            if ($opts['nonexonly']) {
                 $path = preg_replace('/\.\d+\.txt(\.gz)?$/', '', $file);
                 $id = pathID($path, true);
-                if(page_exists($id)) return false;
+                if (page_exists($id)) return false;
             }
 
-            $this->delete($base.$file, 'attic');
+            $this->delete($base . $file, 'attic');
         }
         return true;
     }
@@ -208,24 +214,25 @@ class helper_plugin_cleanup extends DokuWiki_Plugin {
     /**
      * Callback for checking the media attic directories
      */
-    public function cb_check_mediaattic(&$data, $base, $file, $type, $lvl, $opts) {
-        if($type == 'd') {
+    public function cbCheckMediaattic(&$data, $base, $file, $type, $lvl, $opts)
+    {
+        if ($type == 'd') {
             return true;
         }
 
         $time = filemtime($base . $file);
-        if(time() - $time > $opts['maxage']) {
+        if (time() - $time > $opts['maxage']) {
             // skip existing?
-            if($opts['nonexonly']) {
-                list($ext) = mimetype($file);
+            if ($opts['nonexonly']) {
+                [$ext] = mimetype($file);
                 $ext = preg_quote($ext, '/');
                 $path = preg_replace('/\.\d+\.' . $ext . '?$/', ".$ext", $file);
                 $id = pathID($path, true);
 
-                if(file_exists(mediaFN($id))) return false;
+                if (file_exists(mediaFN($id))) return false;
             }
 
-            $this->delete($base.$file, 'mediattic');
+            $this->delete($base . $file, 'mediattic');
         }
         return true;
     }
@@ -233,22 +240,23 @@ class helper_plugin_cleanup extends DokuWiki_Plugin {
     /**
      * Callback for checking the page meta directories
      */
-    public function cb_check_meta(&$data, $base, $file, $type, $lvl, $opts) {
-        if($type == 'd') {
+    public function cbCheckMeta(&$data, $base, $file, $type, $lvl, $opts)
+    {
+        if ($type == 'd') {
             return true;
         }
 
         // only handle known extensions
-        if(!preg_match('/\.(meta|changes|indexed)$/', $file, $m)) return false;
+        if (!preg_match('/\.(meta|changes|indexed)$/', $file, $m)) return false;
         $type = $m[1];
 
         $time = filemtime($base . $file);
-        if(time() - $time > $opts['maxage']) {
+        if (time() - $time > $opts['maxage']) {
             $path = substr($file, 0, -1 * (strlen($type) + 1));
             $id = pathID($path);
-            if(page_exists($id)) return false;
+            if (page_exists($id)) return false;
 
-            $this->delete($base.$file, 'meta');
+            $this->delete($base . $file, 'meta');
         }
         return true;
     }
@@ -256,22 +264,23 @@ class helper_plugin_cleanup extends DokuWiki_Plugin {
     /**
      * Callback for checking the media meta directories
      */
-    public function cb_check_mediameta(&$data, $base, $file, $type, $lvl, $opts) {
-        if($type == 'd') {
+    public function cbCheckMediameta(&$data, $base, $file, $type, $lvl, $opts)
+    {
+        if ($type == 'd') {
             return true;
         }
 
         // only handle known extensions
-        if(!preg_match('/\.(changes)$/', $file, $m)) return false;
+        if (!preg_match('/\.(changes)$/', $file, $m)) return false;
         $type = $m[1];
 
         $time = filemtime($base . $file);
-        if(time() - $time > $opts['maxage']) {
+        if (time() - $time > $opts['maxage']) {
             $path = substr($file, 0, -1 * (strlen($type) + 1));
             $id = pathID($path);
-            if(file_exists(mediaFN($id))) return false;
+            if (file_exists(mediaFN($id))) return false;
 
-            $this->delete($base.$file, 'mediameta');
+            $this->delete($base . $file, 'mediameta');
         }
         return true;
     }
@@ -279,22 +288,19 @@ class helper_plugin_cleanup extends DokuWiki_Plugin {
     /**
      * Callback for checking the locks directories
      */
-    public function cb_check_locks(&$data, $base, $file, $type, $lvl, $opts) {
-        if($type == 'd') {
+    public function cbCheckLocks(&$data, $base, $file, $type, $lvl, $opts)
+    {
+        if ($type == 'd') {
             return true;
         }
 
         // only handle known extensions
-        if(!preg_match('/\.(lock)$/', $file, $m)) return false;
-        $type = $m[1];
+        if (!preg_match('/\.(lock)$/', $file, $m)) return false;
 
         $time = filemtime($base . $file);
-        if(time() - $time > $opts['maxage']) {
-            $this->delete($base.$file, 'lock');
+        if (time() - $time > $opts['maxage']) {
+            $this->delete($base . $file, 'lock');
         }
         return true;
     }
-
 }
-
-// vim:ts=4:sw=4:et:
