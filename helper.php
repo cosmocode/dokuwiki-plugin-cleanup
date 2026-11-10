@@ -108,6 +108,15 @@ class helper_plugin_cleanup extends Plugin
 
         search(
             $data,
+            $conf['mediametadir'],
+            [$this, 'cbCheckMediameta'],
+            [
+                 'maxage' => $this->getConf('mediametaage'),
+            ]
+        );
+
+        search(
+            $data,
             $conf['lockdir'],
             [$this, 'cbCheckLocks'],
             [
