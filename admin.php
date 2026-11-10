@@ -13,6 +13,9 @@ class admin_plugin_cleanup extends DokuWiki_Admin_Plugin {
     /** @var  helper_plugin_cleanup */
     private $helper;
 
+    /** @var string the executed run mode, dry or real, empty if nothing was run */
+    private $run = '';
+
     public function __construct() {
         $this->helper = $this->loadHelper('cleanup', false);
     }
@@ -28,7 +31,15 @@ class admin_plugin_cleanup extends DokuWiki_Admin_Plugin {
      * Should carry out any processing required by the plugin.
      */
     public function handle() {
+        global $INPUT;
 
+        if($INPUT->post->str('run') == 'real' && checkSecurityToken()) {
+            $this->helper->run(true);
+            $this->run = 'real';
+        } elseif($INPUT->str('run') == 'dry') {
+            $this->helper->run();
+            $this->run = 'dry';
+        }
     }
 
     /**
@@ -40,7 +51,7 @@ class admin_plugin_cleanup extends DokuWiki_Admin_Plugin {
         echo $this->locale_xhtml('intro');
         tpl_flush();
 
-        if(empty($_REQUEST['run'])) {
+        if(!$this->run) {
             $form = new Doku_Form(array('action' => script(), 'method' => 'post'));
             $form->addHidden('id', $ID);
             $form->addHidden('page', 'cleanup');
@@ -48,12 +59,6 @@ class admin_plugin_cleanup extends DokuWiki_Admin_Plugin {
             $form->addElement(form_makeButton('submit', 'admin', $this->getLang('preview')));
             $form->printForm();
         } else {
-            if($_REQUEST['run'] == 'real') {
-                $this->helper->run(true);
-            } else {
-                $this->helper->run();
-            }
-
             echo '<ul class="cleanup_files">';
             foreach($this->helper->list as $file) {
                 echo '<li><div class="li">' . hsc($file) . '</div></li>';
@@ -61,7 +66,7 @@ class admin_plugin_cleanup extends DokuWiki_Admin_Plugin {
             echo '</ul>';
             echo '<p>' . sprintf($this->getLang('sum'), count($this->helper->list), filesize_h($this->helper->size)) . '</p>';
 
-            if($_REQUEST['run'] == 'dry') {
+            if($this->run == 'dry') {
                 $form = new Doku_Form(array('action' => script(), 'method' => 'post'));
                 $form->addHidden('id', $ID);
                 $form->addHidden('page', 'cleanup');
